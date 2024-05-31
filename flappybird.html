@@ -10,6 +10,20 @@
             display: block;
             margin: 0 auto;
         }
+
+        #restartButton {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: green;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -34,9 +48,15 @@
     </header>
 
     <canvas id="gameCanvas" width="288" height="512"></canvas>
+    <button id="restartButton">Neustart</button>
+    <div id="score"></div>
+
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
+
+        const restartButton = document.getElementById('restartButton');
+        const scoreDisplay = document.getElementById('score');
 
         // Hintergrundbild
         const background = new Image();
@@ -58,6 +78,9 @@
         // Bodenposition
         let groundX = 0;
 
+        // Punkte
+        let score = 0;
+
         // Tastatursteuerung
         document.addEventListener('keydown', flap);
 
@@ -65,6 +88,17 @@
             if (event.code === 'Space') {
                 velocity = -20; // Flug nach oben
             }
+        }
+
+        // Neustartfunktion
+        restartButton.addEventListener('click', restartGame);
+
+        function restartGame() {
+            score = 0;
+            birdY = canvas.height / 2;
+            velocity = 0;
+            restartButton.style.display = 'none';
+            draw();
         }
 
         // Spiellogik
@@ -91,11 +125,22 @@
                 ctx.font = '30px Arial';
                 ctx.fillStyle = 'red';
                 ctx.fillText('Du bist gestorben!', canvas.width / 2 - 120, canvas.height / 2);
+                restartButton.style.display = 'block';
                 return; // Beende das Spiel
+            }
+
+            // Prüfe, ob der Vogel den oberen Bildschirmrand berührt
+            if (birdY <= 0) {
+                birdY = 0;
+                velocity = 1;
             }
 
             // Zeichne den Vogel
             ctx.drawImage(bird, 10, birdY);
+
+            // Punkte
+            score++;
+            scoreDisplay.innerText = 'Punkte: ' + score;
 
             requestAnimationFrame(draw);
         }
