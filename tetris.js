@@ -177,6 +177,11 @@ update(); // Spiel aktualisieren
 startButton.addEventListener('click', () => {
     addPiece();
     update();
+// Start-Button Eventlistener
+startButton.addEventListener('click', () => {
+    addPiece();
+    update();
+});
 });
 
 // Tastatureingabe-Eventlistener
