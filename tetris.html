@@ -17,7 +17,7 @@
         }
 
         canvas {
-            border: 1px solid #ccc;
+            border: 2px solid #ccc;
         }
 
         .back-btn {
@@ -38,6 +38,13 @@
         .back-btn a:hover {
             background-color: #999;
         }
+
+        #score {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 18px;
+        }
     </style>
 </head>
 <body>
@@ -46,6 +53,7 @@
         <a href="index.html">Zurück zur Startseite</a>
     </div>
     <button id="start-btn">Start</button>
+    <div id="score">Punkte: 0</div>
 
     <script src="tetris.js"></script>
 </body>
