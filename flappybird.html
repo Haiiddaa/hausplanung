@@ -51,8 +51,7 @@
         ground.src = 'images/ground.png';
 
         // Vogelposition und Geschwindigkeit
-        let birdX = 10;
-        let birdY = 150;
+        let birdY = canvas.height / 2;
         let gravity = 1.5;
         let velocity = 0;
 
@@ -72,22 +71,22 @@
         function draw() {
             ctx.drawImage(background, 0, 0);
 
-            // Zeichne den Vogel
-            ctx.drawImage(bird, birdX, birdY);
-
-            // Bewege den Vogel nach unten
-            velocity += gravity;
-            birdY += velocity;
-
-            // Zeichne den Boden
-            ctx.drawImage(ground, groundX, canvas.height - ground.height);
-            ctx.drawImage(ground, groundX + ground.width, canvas.height - ground.height);
-
             // Bewege den Boden nach links
             groundX -= 1;
             if (groundX <= -ground.width) {
                 groundX = 0;
             }
+
+            // Zeichne den Boden
+            ctx.drawImage(ground, groundX, canvas.height - ground.height);
+            ctx.drawImage(ground, groundX + ground.width, canvas.height - ground.height);
+
+            // Bewege den Vogel nach unten
+            velocity += gravity;
+            birdY += velocity;
+
+            // Zeichne den Vogel
+            ctx.drawImage(bird, 10, birdY);
 
             requestAnimationFrame(draw);
         }
