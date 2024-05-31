@@ -38,10 +38,25 @@
         .back-btn a:hover {
             background-color: #999;
         }
+
+        #start-btn {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
     <canvas id="tetris" width="240" height="400"></canvas>
+    <button id="start-btn">Start</button>
     <div class="back-btn">
         <a href="index.html">Zurück zur Startseite</a>
     </div>
