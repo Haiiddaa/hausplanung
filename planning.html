@@ -3,215 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Planungswerkzeug - Hausplanung</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <title>Planungswerkzeug</title>
     <style>
         body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f4f4f4;
             margin: 0;
-            padding: 0;
-            color: #333;
-            position: relative;
+            overflow: hidden;
         }
-        .header, .footer {
-            background: #4CAF50;
-            color: #fff;
-            text-align: center;
-            padding: 20px 0;
-        }
-        .header .container, .footer .container {
-            padding: 0 15px;
-        }
-        .header .logo img, .footer .logo img {
-            width: 120px;
-        }
-        nav ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-        }
-        nav ul li {
-            margin: 0 10px;
-        }
-        nav ul li a {
-            color: #fff;
-            text-decoration: none;
-            font-size: 14px;
-            transition: color 0.3s;
-        }
-        nav ul li a:hover {
-            color: #ddd;
-        }
-        .hero {
-            background: url('images/planning.jpg') no-repeat center center/cover;
-            height: 50vh;
+        #canvas {
+            width: 100vw;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            text-align: center;
-            color: #fff;
-            position: relative;
-        }
-        .hero::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-        }
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            padding: 0 20px;
-        }
-        .hero h1 {
-            font-size: 36px;
-            margin: 0;
-        }
-        .hero p {
-            font-size: 18px;
-        }
-        .content-section {
-            padding: 30px 15px;
-            text-align: center;
-        }
-        .content-section h2 {
-            font-size: 28px;
-            margin-bottom: 20px;
-            color: #333;
-        }
-        .content-section p {
-            font-size: 16px;
-            color: #666;
-            line-height: 1.6;
-        }
-        .planning-tool {
-            max-width: 600px;
-            margin: 0 auto;
-            text-align: left;
-        }
-        .planning-tool label {
-            display: block;
-            margin-bottom: 10px;
-            color: #333;
-        }
-        .planning-tool input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 20px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 16px;
-        }
-        .planning-tool button {
-            background: #4CAF50;
-            color: #fff;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background 0.3s;
-        }
-        .planning-tool button:hover {
-            background: #45a049;
-        }
-        .planning-result {
-            margin-top: 30px;
-            text-align: center;
-        }
-        .room {
-            display: inline-block;
-            background: #4CAF50;
-            color: #fff;
-            margin: 10px;
-            padding: 20px;
-            border-radius: 5px;
-            position: relative;
-        }
-        .room span {
-            position: absolute;
-            top: 5px;
-            left: 5px;
-            font-size: 12px;
         }
     </style>
-    <script>
-        function createRoom() {
-            const roomName = document.getElementById('room-name').value;
-            const roomWidth = document.getElementById('room-width').value;
-            const roomHeight = document.getElementById('room-height').value;
-
-            if(roomName && roomWidth && roomHeight) {
-                const roomDiv = document.createElement('div');
-                roomDiv.className = 'room';
-                roomDiv.style.width = roomWidth * 10 + 'px';
-                roomDiv.style.height = roomHeight * 10 + 'px';
-                roomDiv.innerHTML = `<span>${roomName}</span>`;
-                document.getElementById('planning-result').appendChild(roomDiv);
-            } else {
-                alert('Bitte alle Felder ausfüllen!');
-            }
-        }
-    </script>
 </head>
 <body>
-    <!-- Header -->
-    <div class="header">
-        <div class="container">
-            <div class="logo">
-                <img src="images/logo.png" alt="Hausplanung Logo">
-            </div>
-            <nav>
-                <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="livingroom.html">Wohnzimmer</a></li>
-                    <li><a href="kitchen.html">Küche</a></li>
-                    <li><a href="bedroom.html">Schlafzimmer</a></li>
-                    <li><a href="bathroom.html">Badezimmer</a></li>
-                    <li><a href="contact.html">Kontakt</a></li>
-                    <li><a href="planning.html">Planungswerkzeug</a></li>
-                </ul>
-            </nav>
-        </div>
-    </div>
-
-    <!-- Hero Section -->
-    <div class="hero">
-        <div class="hero-content">
-            <h1>Planungswerkzeug</h1>
-            <p>Plane deine Räume mit unserem einfachen Werkzeug</p>
-        </div>
-    </div>
-
-    <!-- Content Section -->
-    <div class="content-section">
-        <h2>Planungstool</h2>
-        <p>Gib die Maße deiner Räume ein, um eine einfache visuelle Darstellung zu erhalten.</p>
-        <div class="planning-tool">
-            <label for="room-name">Raumname:</label>
-            <input type="text" id="room-name" name="room-name" required>
-            <label for="room-width">Raumbreite (in Metern):</label>
-            <input type="number" id="room-width" name="room-width" required>
-            <label for="room-height">Raumhöhe (in Metern):</label>
-            <input type="number" id="room-height" name="room-height" required>
-            <button onclick="createRoom()">Raum erstellen</button>
-        </div>
-        <div id="planning-result" class="planning-result"></div>
-    </div>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <p>Folge uns auf <a href="https://www.instagram.com/hausplanung" target="_blank">Instagram</a></p>
-            <p>&copy; 2024 Hausplanung</p>
-        </div>
-    </footer>
+    <div id="canvas"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="planning.js"></script>
 </body>
 </html>
+```
+
+JavaScript (planning.js):
+```javascript
+// Erstellen Sie eine Szene, eine Kamera und ein Renderelement
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const renderer = new THREE.WebGLRenderer();
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.getElementById('canvas').appendChild(renderer.domElement);
+
+// Erstellen Sie ein Möbelstück (z. B. ein Sofa)
+const geometry = new THREE.BoxGeometry(1, 1, 1);
+const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+const sofa = new THREE.Mesh(geometry, material);
+scene.add(sofa);
+
+// Positionieren Sie das Möbelstück in der Szene
+sofa.position.set(0, 0, -5);
+
+// Positionieren und richten Sie die Kamera aus
+camera.position.z = 5;
+
+// Fügen Sie eine Lichtquelle hinzu
+const light = new THREE.PointLight(0xffffff, 1);
+light.position.set(0, 0, 10);
+scene.add(light);
+
+// Animieren Sie die Szene
+function animate() {
+    requestAnimationFrame(animate);
+    renderer.render(scene, camera);
+}
+animate();
