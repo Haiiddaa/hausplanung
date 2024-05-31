@@ -50,6 +50,17 @@
     <header class="header">
         <div class="container">
             <h1>Hausplanung - Planungswerkzeug</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="livingroom.html">Wohnzimmer</a></li>
+                    <li><a href="kitchen.html">Küche</a></li>
+                    <li><a href="bedroom.html">Schlafzimmer</a></li>
+                    <li><a href="bathroom.html">Badezimmer</a></li>
+                    <li><a href="contact.html">Kontakt</a></li>
+                    <li><a href="planning.html">Planungswerkzeug</a></li>
+                </ul>
+            </nav>
         </div>
     </header>
 
@@ -64,7 +75,6 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        // JavaScript-Code für die 3D-Szene und das Hinzufügen von Möbeln
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas') });
@@ -77,22 +87,101 @@
         directionalLight.position.set(10, 10, 5);
         scene.add(directionalLight);
 
-        // Platzieren Sie Ihre 3D-Modelle hier
-
         camera.position.z = 5;
 
-        // Animationsfunktion
-        const animate = function () {
-            requestAnimationFrame(animate);
-            renderer.render(scene, camera);
-        };
+        // Zeichnen eines Rechtecks
+        let room;
+        const roomMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00, side: THREE.DoubleSide });
+        const roomGeometry = new THREE.Geometry();
+        const roomPoints = [];
 
-        document.getElementById('start-planning-btn').addEventListener('click', () => {
-            // Hier können Sie Logik hinzufügen, um das Planungstool zu starten
-            alert('Planungstool starten!');
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
+
+        document.getElementById('canvas').addEventListener('click', function (event) {
+            event.preventDefault();
+
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+            raycaster.setFromCamera(mouse, camera);
+
+            const intersects = raycaster.intersectObjects(scene.children);
+
+            if (intersects.length > 0) {
+                const point = intersects[0].point;
+                roomPoints.push(new THREE.Vector3(point.x, point.y, 0));
+
+                if (roomPoints.length === 2) {
+                    const width = roomPoints[1].distanceTo(roomPoints[0]);
+                    const height = 3; // Placeholder for room height
+
+                    roomGeometry.vertices.push(
+                        new THREE.Vector3(roomPoints[0].x, roomPoints[0].y, 0),
+                        new THREE.Vector3(roomPoints[1].x, roomPoints[1].y, 0),
+                        new THREE.Vector3(roomPoints[1].x, roomPoints[1].y, height),
+                        new THREE.Vector3(roomPoints[0].x, roomPoints[0].y, height)
+                    );
+
+                    roomGeometry.faces.push(new THREE.Face3(0, 1, 2));
+                    roomGeometry.faces.push(new THREE.Face3(0, 2, 3));
+
+                    room = new THREE.Mesh(roomGeometry, roomMaterial);
+                    scene.add(room);
+
+                    roomPoints.length = 0; // Reset room points
+                }
+            }
         });
 
-        animate();
-    </script>
+        // Animationsfunktion
+function animate() {
+    requestAnimationFrame(animate);
+    renderer.render(scene, camera);
+}
+animate();
+
+document.getElementById('start-planning-btn').addEventListener('click', function () {
+    document.getElementById('start-planning-btn').style.display = 'none';
+});
+
+// Funktion zum Beschriften und Einfärben der gezeichneten Räume
+function labelAndColorRooms() {
+    const labelText = prompt("Gib einen Namen für den Raum ein:");
+    const label = document.createElement('div');
+    label.innerText = labelText;
+    label.style.position = 'absolute';
+    label.style.top = '50%';
+    label.style.left = '50%';
+    label.style.transform = 'translate(-50%, -50%)';
+    document.body.appendChild(label);
+
+    const color = prompt("Gib eine Farbe für den Raum ein (Hex-Code):");
+    roomMaterial.color.setHex(color.replace('#', '0x'));
+
+    // Anpassen der Raumhöhe und Position
+    roomGeometry.vertices.forEach(vertex => {
+        vertex.z = vertex.z * 2; // Doppelte Höhe
+    });
+    roomGeometry.verticesNeedUpdate = true;
+
+    animate();
+}
+
+document.getElementById('canvas').addEventListener('contextmenu', function (event) {
+    event.preventDefault();
+    labelAndColorRooms();
+});
+
+// Löschen des letzten gezeichneten Raums mit Rechtsklick
+document.getElementById('canvas').addEventListener('mousedown', function (event) {
+    if (event.button === 2 && room) {
+        scene.remove(room);
+        roomGeometry.dispose();
+        roomMaterial.dispose();
+        room = null;
+    }
+});
+</script>
 </body>
 </html>
