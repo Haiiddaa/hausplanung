@@ -175,6 +175,7 @@ function update(time = 0) {
     draw(); // Spielfeld neu zeichnen
 
     requestAnimationFrame(update); // Nächste Aktualisierung anfordern
+     return Promise.resolve(); // Versprechen zurückgeben
 }
 
 // Spielfeld initialisieren
