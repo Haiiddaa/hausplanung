@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flappy Bird</title>
+    <style>
+        canvas {
+            border: 1px solid #000;
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas" width="288" height="512"></canvas>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Hintergrundbild
+        const background = new Image();
+        background.src = 'images/background.png';
+
+        // Vogelbild
+        const bird = new Image();
+        bird.src = 'images/bird.png';
+
+        // Bodenbild
+        const ground = new Image();
+        ground.src = 'images/ground.png';
+
+        // Vogelposition und Geschwindigkeit
+        let birdX = 10;
+        let birdY = 150;
+        let gravity = 1.5;
+        let velocity = 0;
+
+        // Bodenposition
+        let groundX = 0;
+
+        // Tastatursteuerung
+        document.addEventListener('keydown', flap);
+
+        function flap(event) {
+            if (event.code === 'Space') {
+                velocity = -20; // Flug nach oben
+            }
+        }
+
+        // Spiellogik
+        function draw() {
+            ctx.drawImage(background, 0, 0);
+
+            // Zeichne den Vogel
+            ctx.drawImage(bird, birdX, birdY);
+
+            // Bewege den Vogel nach unten
+            velocity += gravity;
+            birdY += velocity;
+
+            // Zeichne den Boden
+            ctx.drawImage(ground, groundX, canvas.height - ground.height);
+            ctx.drawImage(ground, groundX + ground.width, canvas.height - ground.height);
+
+            // Bewege den Boden nach links
+            groundX -= 1;
+            if (groundX <= -ground.width) {
+                groundX = 0;
+            }
+
+            requestAnimationFrame(draw);
+        }
+
+        draw(); // Starte das Spiel
+    </script>
+</body>
+</html>
