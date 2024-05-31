@@ -4,22 +4,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Planungswerkzeug</title>
-    <style>
-        body {
-            margin: 0;
-            overflow: hidden;
-        }
-        #canvas {
-            width: 100vw;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="canvas"></div>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <img src="images/logo.png" alt="Hausplanung Logo">
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="livingroom.html">Wohnzimmer</a></li>
+                    <li><a href="kitchen.html">Küche</a></li>
+                    <li><a href="bedroom.html">Schlafzimmer</a></li>
+                    <li><a href="bathroom.html">Badezimmer</a></li>
+                    <li><a href="contact.html">Kontakt</a></li>
+                    <li><a href="planning.html">Planungswerkzeug</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Planungswerkzeug</h1>
+            <p>Plane dein Traumhaus mit unserem einfachen Werkzeug</p>
+        </div>
+    </section>
+
+    <!-- Content Section -->
+    <section class="content-section">
+        <div id="canvas"></div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>Folge uns auf <a href="https://www.instagram.com/hausplanung" target="_blank">Instagram</a></p>
+            <p>&copy; 2024 Hausplanung</p>
+        </div>
+    </footer>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="planning.js"></script>
 </body>
