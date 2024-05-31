@@ -3,45 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hausplanung - Planungswerkzeug</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <title>Planungswerkzeug</title>
     <style>
-        #canvas {
-            width: 100%;
-            height: calc(100vh - 100px); /* Adjust based on your header height */
-            background-color: #f4f4f4;
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Verhindert horizontales Scrollen */
         }
-        #planning-tool-container {
+        #canvas-container {
             position: relative;
         }
-        .header {
-            background: #333;
-            color: #fff;
-            padding: 10px;
-            text-align: center;
+        #canvas {
+            width: 100vw;
+            height: 80vh; /* Anpassen der Höhe */
+            border: 1px solid #ccc;
+            position: relative;
         }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        .content {
-            padding: 20px;
-            text-align: center;
-        }
-        .btn {
-            display: inline-block;
+        #start-planning-btn {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 999;
+            background-color: #fff;
             padding: 10px 20px;
-            margin-top: 20px;
-            background: #28a745;
-            color: #fff;
-            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+            border: 1px solid #ccc;
             border-radius: 5px;
-            transition: background 0.3s;
-            font-size: 14px;
         }
-        .btn:hover {
-            background: #218838;
+        #modal-container {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            z-index: 1000;
+        }
+        #modal-container input[type="text"] {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 5px;
+            box-sizing: border-box;
+        }
+        #modal-container input[type="color"] {
+            margin-bottom: 10px;
+            padding: 5px;
+            box-sizing: border-box;
+        }
+        #modal-container button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -49,7 +66,9 @@
     <!-- Header -->
     <header class="header">
         <div class="container">
-            <h1>Hausplanung - Planungswerkzeug</h1>
+            <div class="logo">
+                <img src="images/logo.png" alt="Hausplanung Logo">
+            </div>
             <nav>
                 <ul>
                     <li><a href="index.html">Home</a></li>
@@ -64,124 +83,108 @@
         </div>
     </header>
 
-    <!-- Main Content -->
-    <div class="container content">
-        <p>Willkommen zur Hausplanung. Plane dein Traumhaus mit unserem einfachen Werkzeug.</p>
-        <div id="planning-tool-container">
-            <canvas id="canvas"></canvas>
-            <button id="start-planning-btn" class="btn">Jetzt starten</button>
+    <div id="canvas-container">
+        <button id="start-planning-btn">Starte die Planung</button>
+        <div id="modal-container">
+            <input type="text" id="room-label" placeholder="Raumbezeichnung">
+            <input type="color" id="room-color">
+            <button id="save-room-btn">Raum speichern</button>
         </div>
+        <canvas id="canvas"></canvas>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas') });
-        renderer.setSize(window.innerWidth, window.innerHeight - 100); // Adjust based on your header height
+        // Raumvariablen
+        let rooms = [];
+        let currentRoom = null;
+        let isDrawing = false;
+        let startX, startY;
 
-        // Hinzufügen von Lichtern
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-        scene.add(ambientLight);
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
-        directionalLight.position.set(10, 10, 5);
-        scene.add(directionalLight);
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const modalContainer = document.getElementById('modal-container');
+        const saveRoomBtn = document.getElementById('save-room-btn');
 
-        camera.position.z = 5;
+        // Eventlistener für Mausbewegung und Klick
+        canvas.addEventListener('mousedown', handleMouseDown);
+        canvas.addEventListener('mousemove', handleMouseMove);
+        canvas.addEventListener('mouseup', handleMouseUp);
+        saveRoomBtn.addEventListener('click', saveRoom);
 
-        // Zeichnen eines Rechtecks
-        let room;
-        const roomMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00, side: THREE.DoubleSide });
-        const roomGeometry = new THREE.Geometry();
-        const roomPoints = [];
+        // Funktion für Mausklick
+        function handleMouseDown(event) {
+            isDrawing = true;
+            startX = event.clientX;
+            startY = event.clientY;
+        }
 
-        const raycaster = new THREE.Raycaster();
-        const mouse = new THREE.Vector2();
-
-        document.getElementById('canvas').addEventListener('click', function (event) {
-            event.preventDefault();
-
-            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
-            raycaster.setFromCamera(mouse, camera);
-
-            const intersects = raycaster.intersectObjects(scene.children);
-
-            if (intersects.length > 0) {
-                const point = intersects[0].point;
-                roomPoints.push(new THREE.Vector3(point.x, point.y, 0));
-
-                if (roomPoints.length === 2) {
-                    const width = roomPoints[1].distanceTo(roomPoints[0]);
-                    const height = 3; // Placeholder for room height
-
-                    roomGeometry.vertices.push(
-                        new THREE.Vector3(roomPoints[0].x, roomPoints[0].y, 0),
-                        new THREE.Vector3(roomPoints[1].x, roomPoints[1].y, 0),
-                        new THREE.Vector3(roomPoints[1].x, roomPoints[1].y, height),
-                        new THREE.Vector3(roomPoints[0].x, roomPoints[0].y, height)
-                    );
-
-                    roomGeometry.faces.push(new THREE.Face3(0, 1, 2));
-                    roomGeometry.faces.push(new THREE.Face3(0, 2, 3));
-
-                    room = new THREE.Mesh(roomGeometry, roomMaterial);
-                    scene.add(room);
-
-                    roomPoints.length = 0; // Reset room points
-                }
+        // Funktion für Mausbewegung
+        function handleMouseMove(event) {
+            if (isDrawing) {
+                drawRoom(event.clientX, event.clientY);
             }
-        });
+        }
 
-        // Animationsfunktion
-function animate() {
-    requestAnimationFrame(animate);
-    renderer.render(scene, camera);
-}
-animate();
+        // Funktion für Mausklick loslassen
+        function handleMouseUp(event) {
+            isDrawing = false;
+            if (currentRoom) {
+                showModal(event.clientX, event.clientY);
+            }
+        }
 
-document.getElementById('start-planning-btn').addEventListener('click', function () {
-    document.getElementById('start-planning-btn').style.display = 'none';
-});
+        // Funktion zum Zeichnen des Raums
+        function drawRoom(x, y) {
+            if (!currentRoom) {
+                currentRoom = {
+                    startX: startX,
+                    startY: startY,
+                    endX: x,
+                    endY: y
+                };
+            } else {
+                currentRoom.endX = x;
+                currentRoom.endY = y;
+            }
 
-// Funktion zum Beschriften und Einfärben der gezeichneten Räume
-function labelAndColorRooms() {
-    const labelText = prompt("Gib einen Namen für den Raum ein:");
-    const label = document.createElement('div');
-    label.innerText = labelText;
-    label.style.position = 'absolute';
-    label.style.top = '50%';
-    label.style.left = '50%';
-    label.style.transform = 'translate(-50%, -50%)';
-    document.body.appendChild(label);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            rooms.forEach(room => {
+                ctx.fillStyle = room.color;
+                ctx.fillRect(room.startX, room.startY, room.endX - room.startX, room.endY - room.startY);
+            });
 
-    const color = prompt("Gib eine Farbe für den Raum ein (Hex-Code):");
-    roomMaterial.color.setHex(color.replace('#', '0x'));
+            ctx.fillStyle = '#ccc';
+            ctx.fillRect(startX, startY, x - startX, y - startY);
+        }
 
-    // Anpassen der Raumhöhe und Position
-    roomGeometry.vertices.forEach(vertex => {
-        vertex.z = vertex.z * 2; // Doppelte Höhe
-    });
-    roomGeometry.verticesNeedUpdate = true;
+        // Funktion zum Anzeigen des Modaldialogs
+        function showModal(x, y) {
+            modalContainer.style.display = 'block';
+            modalContainer.style.left = x + 'px';
+            modalContainer.style.top = y + 'px';
+        }
 
-    animate();
-}
+        // Funktion zum Speichern des Raums
+        function saveRoom() {
+            const roomLabel = document.getElementById('room-label').value;
+            const roomColor = document.getElementById('room-color').value;
+            currentRoom.label = roomLabel;
+            currentRoom.color = roomColor;
+            rooms.push(currentRoom);
+            currentRoom = null;
+            modalContainer.style.display = 'none';
+            redrawRooms();
+        }
 
-document.getElementById('canvas').addEventListener('contextmenu', function (event) {
-    event.preventDefault();
-    labelAndColorRooms();
-});
-
-// Löschen des letzten gezeichneten Raums mit Rechtsklick
-document.getElementById('canvas').addEventListener('mousedown', function (event) {
-    if (event.button === 2 && room) {
-        scene.remove(room);
-        roomGeometry.dispose();
-        roomMaterial.dispose();
-        room = null;
-    }
-});
-</script>
+        // Funktion zum Neuzeichnen aller Räume
+        function redrawRooms() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            rooms.forEach(room => {
+                ctx.fillStyle = room.color;
+                ctx.fillRect(room.startX, room.startY, room.endX - room.startX, room.endY - room.startY);
+            });
+        }
+    </script>
 </body>
 </html>
