@@ -5,10 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flappy Bird</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
         canvas {
             background-color: #70c5ce;
             display: block;
             margin: 0 auto;
+        }
+        .header {
+            background-color: #f2f2f2;
+            padding: 20px 0;
+            text-align: center;
+        }
+        .header ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .header ul li {
+            display: inline;
+            margin-right: 20px;
+        }
+        .header ul li:last-child {
+            margin-right: 0;
+        }
+        .header ul li a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
         }
         #score {
             font-family: Arial, sans-serif;
@@ -45,6 +71,17 @@
     </style>
 </head>
 <body>
+    <div class="header">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="livingroom.html">Wohnzimmer</a></li>
+            <li><a href="kitchen.html">Küche</a></li>
+            <li><a href="bedroom.html">Schlafzimmer</a></li>
+            <li><a href="bathroom.html">Badezimmer</a></li>
+            <li><a href="contact.html">Kontakt</a></li>
+            <li><a href="planning.html">Planungswerkzeug</a></li>
+        </ul>
+    </div>
     <canvas id="gameCanvas" width="480" height="320"></canvas>
     <div id="score">Score: 0</div>
     <div id="game-over">Du bist gestorben!</div>
@@ -99,6 +136,7 @@
             ctx.drawImage(birdImg, birdX, birdY);
             velocity += gravity;
             birdY += velocity;
+            document.getElementById("score").innerText = "Score: " + score;
             requestAnimationFrame(draw);
         }
 
