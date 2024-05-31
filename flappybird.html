@@ -6,146 +6,127 @@
     <title>Flappy Bird</title>
     <style>
         canvas {
-            border: 1px solid #000;
+            background-color: #70c5ce;
             display: block;
             margin: 0 auto;
         }
-
-        #restartButton {
-            display: none;
+        #score {
+            font-family: Arial, sans-serif;
+            font-size: 24px;
+            color: #fff;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+        #game-over {
+            font-family: Arial, sans-serif;
+            font-size: 36px;
+            color: red;
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+            display: none;
+        }
+        #restart-btn {
+            position: absolute;
+            top: 60%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             background-color: green;
-            color: #fff;
+            color: white;
             padding: 10px 20px;
             border: none;
             border-radius: 5px;
+            font-size: 20px;
             cursor: pointer;
+            display: none;
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="container">
-            <div class="logo">
-                <img src="images/logo.png" alt="Hausplanung Logo">
-            </div>
-            <nav>
-                <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="livingroom.html">Wohnzimmer</a></li>
-                    <li><a href="kitchen.html">Küche</a></li>
-                    <li><a href="bedroom.html">Schlafzimmer</a></li>
-                    <li><a href="bathroom.html">Badezimmer</a></li>
-                    <li><a href="contact.html">Kontakt</a></li>
-                    <li><a href="planning.html">Planungswerkzeug</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
-
-    <canvas id="gameCanvas" width="288" height="512"></canvas>
-    <button id="restartButton">Neustart</button>
-    <div id="score"></div>
+    <canvas id="gameCanvas" width="480" height="320"></canvas>
+    <div id="score">Score: 0</div>
+    <div id="game-over">Du bist gestorben!</div>
+    <button id="restart-btn" onclick="restartGame()">Neustart</button>
 
     <script>
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+        const birdImg = new Image();
+        const backgroundImg = new Image();
+        const pipeNorthImg = new Image();
+        const pipeSouthImg = new Image();
 
-        const restartButton = document.getElementById('restartButton');
-        const scoreDisplay = document.getElementById('score');
+        birdImg.src = "images/bird.png";
+        backgroundImg.src = "images/bg.png";
+        pipeNorthImg.src = "images/pipeNorth.png";
+        pipeSouthImg.src = "images/pipeSouth.png";
 
-        // Hintergrundbild
-        const background = new Image();
-        background.src = 'images/background.png';
-
-        // Vogelbild
-        const bird = new Image();
-        bird.src = 'images/bird.png';
-
-        // Bodenbild
-        const ground = new Image();
-        ground.src = 'images/ground.png';
-
-        // Vogelposition und Geschwindigkeit
-        let birdY = canvas.height / 2;
-        let gravity = 1.5;
+        const gravity = 1.5;
+        let birdX = 10;
+        let birdY = 150;
         let velocity = 0;
-
-        // Bodenposition
-        let groundX = 0;
-
-        // Punkte
+        let pipe = [];
+        pipe[0] = {
+            x: canvas.width,
+            y: 0
+        };
         let score = 0;
 
-        // Tastatursteuerung
-        document.addEventListener('keydown', flap);
-
-        function flap(event) {
-            if (event.code === 'Space') {
-                velocity = -20; // Flug nach oben
-            }
-        }
-
-        // Neustartfunktion
-        restartButton.addEventListener('click', restartGame);
-
-        function restartGame() {
-            score = 0;
-            birdY = canvas.height / 2;
-            velocity = 0;
-            restartButton.style.display = 'none';
-            draw();
-        }
-
-        // Spiellogik
         function draw() {
-            ctx.drawImage(background, 0, 0);
-
-            // Bewege den Boden nach links
-            groundX -= 1;
-            if (groundX <= -ground.width) {
-                groundX = 0;
+            ctx.drawImage(backgroundImg, 0, 0);
+            for (let i = 0; i < pipe.length; i++) {
+                ctx.drawImage(pipeNorthImg, pipe[i].x, pipe[i].y);
+                ctx.drawImage(pipeSouthImg, pipe[i].x, pipe[i].y + pipeNorthImg.height + 150);
+                pipe[i].x--;
+                if (pipe[i].x === 125) {
+                    pipe.push({
+                        x: canvas.width,
+                        y: Math.floor(Math.random() * pipeNorthImg.height) - pipeNorthImg.height
+                    });
+                }
+                if (birdX + birdImg.width >= pipe[i].x && birdX <= pipe[i].x + pipeNorthImg.width &&
+                    (birdY <= pipe[i].y + pipeNorthImg.height || birdY + birdImg.height >= pipe[i].y + pipeNorthImg.height + 150) ||
+                    birdY + birdImg.height >= canvas.height) {
+                        gameOver();
+                        return;
+                    }
+                if (pipe[i].x === 5) {
+                    score++;
+                }
             }
-
-            // Zeichne den Boden
-            ctx.drawImage(ground, groundX, canvas.height - ground.height);
-            ctx.drawImage(ground, groundX + ground.width, canvas.height - ground.height);
-
-            // Bewege den Vogel nach unten
+            ctx.drawImage(birdImg, birdX, birdY);
             velocity += gravity;
             birdY += velocity;
-
-            // Prüfe, ob der Vogel den Boden berührt
-            if (birdY >= canvas.height - ground.height - bird.height) {
-                // Du bist gestorben!
-                ctx.font = '30px Arial';
-                ctx.fillStyle = 'red';
-                ctx.fillText('Du bist gestorben!', canvas.width / 2 - 120, canvas.height / 2);
-                restartButton.style.display = 'block';
-                return; // Beende das Spiel
-            }
-
-            // Prüfe, ob der Vogel den oberen Bildschirmrand berührt
-            if (birdY <= 0) {
-                birdY = 0;
-                velocity = 1;
-            }
-
-            // Zeichne den Vogel
-            ctx.drawImage(bird, 10, birdY);
-
-            // Punkte
-            score++;
-            scoreDisplay.innerText = 'Punkte: ' + score;
-
             requestAnimationFrame(draw);
         }
 
-        draw(); // Starte das Spiel
+        function jump() {
+            velocity = -20;
+        }
+
+        function gameOver() {
+            document.getElementById("game-over").style.display = "block";
+            document.getElementById("restart-btn").style.display = "block";
+        }
+
+        function restartGame() {
+            birdY = 150;
+            velocity = 0;
+            pipe = [];
+            pipe[0] = {
+                x: canvas.width,
+                y: 0
+            };
+            score = 0;
+            document.getElementById("game-over").style.display = "none";
+            document.getElementById("restart-btn").style.display = "none";
+            draw();
+        }
+
+        document.addEventListener("keydown", jump);
+        draw();
     </script>
 </body>
 </html>
