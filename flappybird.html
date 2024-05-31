@@ -85,6 +85,15 @@
             velocity += gravity;
             birdY += velocity;
 
+            // Prüfe, ob der Vogel den Boden berührt
+            if (birdY >= canvas.height - ground.height - bird.height) {
+                // Du bist gestorben!
+                ctx.font = '30px Arial';
+                ctx.fillStyle = 'red';
+                ctx.fillText('Du bist gestorben!', canvas.width / 2 - 120, canvas.height / 2);
+                return; // Beende das Spiel
+            }
+
             // Zeichne den Vogel
             ctx.drawImage(bird, 10, birdY);
 
