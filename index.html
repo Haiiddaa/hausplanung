@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bicos Beatstore</title>
+    <title>Hausplanung</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
@@ -16,7 +16,7 @@
             position: relative;
         }
         .header {
-            background: #333;
+            background: #4CAF50;
             padding: 10px 0;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
@@ -48,8 +48,8 @@
             color: #ddd;
         }
         .hero {
-            background: url('images/studio.jpg') no-repeat center center/cover;
-            height: 50vh;
+            background: url('images/house.jpg') no-repeat center center/cover;
+            height: 60vh;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -64,7 +64,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.5);
         }
         .hero-content {
             position: relative;
@@ -72,36 +72,36 @@
             padding: 0 20px;
         }
         .hero h1 {
-            font-size: 24px;
+            font-size: 36px;
             margin: 0;
         }
         .hero p {
-            font-size: 16px;
+            font-size: 18px;
         }
         .btn {
             display: inline-block;
             padding: 10px 20px;
             margin-top: 20px;
-            background: #28a745;
+            background: #4CAF50;
             color: #fff;
             text-decoration: none;
             border-radius: 5px;
             transition: background 0.3s;
-            font-size: 14px;
+            font-size: 16px;
         }
         .btn:hover {
-            background: #218838;
+            background: #388E3C;
         }
-        .beats-section {
+        .planning-section {
             padding: 30px 15px;
             text-align: center;
         }
-        .beats-section h2 {
-            font-size: 24px;
+        .planning-section h2 {
+            font-size: 28px;
             margin-bottom: 20px;
             color: #333;
         }
-        .beat-item {
+        .room-item {
             background: #fff;
             padding: 20px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -112,27 +112,9 @@
             width: calc(100% - 40px);
             max-width: 300px;
         }
-        .beat-image img {
+        .room-image img {
             max-width: 100%;
             border-radius: 10px;
-        }
-        .play-button {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 50px;
-            height: 50px;
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            color: #fff;
-            font-size: 24px;
-            line-height: 50px;
-            text-align: center;
         }
         .footer {
             background: #333;
@@ -155,17 +137,16 @@
     <div class="header">
         <div class="container">
             <div class="logo">
-                <img src="images/logo.png" alt="Bicos Beatstore Logo">
+                <img src="images/logo.png" alt="Hausplanung Logo">
             </div>
             <nav>
                 <ul>
                     <li><a href="index.html">Home</a></li>
-                    <li><a href="Beats.html">Beats</a></li>
-                    <li><a href="About.html">About</a></li>
-                    <li><a href="Contact.html">Contact</a></li>
-                    <li><a href="Account.html">Account</a></li>
-                    <li><a href="impressum.html">Impressum</a></li>
-                    <li><a href="lizenz.html">Lizenzen</a></li> <!-- Lizenzen Link hinzugefügt -->
+                    <li><a href="livingroom.html">Wohnzimmer</a></li>
+                    <li><a href="kitchen.html">Küche</a></li>
+                    <li><a href="bedroom.html">Schlafzimmer</a></li>
+                    <li><a href="bathroom.html">Badezimmer</a></li>
+                    <li><a href="contact.html">Kontakt</a></li>
                 </ul>
             </nav>
         </div>
@@ -174,29 +155,55 @@
     <!-- Hero Section -->
     <div class="hero">
         <div class="hero-content">
-            <h1>Youngbico. <br> Dein Beatstore <br> Exklusive Beats und Lizenzen</h1>
-            <p>Entdecke die besten Beats für deine Projekte</p>
-            <a href="Beats.html" class="btn">Jetzt entdecken</a>
+            <h1>Willkommen zur Hausplanung</h1>
+            <p>Gestalte dein Traumhaus mit unseren Planungswerkzeugen</p>
+            <a href="livingroom.html" class="btn">Jetzt starten</a>
         </div>
     </div>
 
-    <!-- Beats Section -->
-    <div class="beats-section">
-        <h2>Beats</h2>
-        <div class="beat-item">
-            <div class="beat-image">
-                <img src="images/ocean_image.jpg" alt="Beat Image">
-                <div class="play-button" onclick="togglePlayPause('ocean-audio', this)">▶</div>
+    <!-- Planning Section -->
+    <div class="planning-section">
+        <h2>Unsere Räume</h2>
+        <div class="room-item">
+            <div class="room-image">
+                <img src="images/livingroom.jpg" alt="Wohnzimmer">
             </div>
-            <h4>Remember The Fallen (Youngbico & Ollie Takahashi) - 136 Bpm Amin</h4>
-            <p>Lease: $50</p>
+            <h4>Wohnzimmer</h4>
+            <p>Entdecke Designideen und Inspirationen für dein Wohnzimmer.</p>
+            <a href="livingroom.html" class="btn">Mehr erfahren</a>
+        </div>
+        <div class="room-item">
+            <div class="room-image">
+                <img src="images/kitchen.jpg" alt="Küche">
+            </div>
+            <h4>Küche</h4>
+            <p>Plane die perfekte Küche mit unseren Tipps und Ideen.</p>
+            <a href="kitchen.html" class="btn">Mehr erfahren</a>
+        </div>
+        <div class="room-item">
+            <div class="room-image">
+                <img src="images/bedroom.jpg" alt="Schlafzimmer">
+            </div>
+            <h4>Schlafzimmer</h4>
+            <p>Finde die besten Designideen für dein Schlafzimmer.</p>
+            <a href="bedroom.html" class="btn">Mehr erfahren</a>
+        </div>
+        <div class="room-item">
+            <div class="room-image">
+                <img src="images/bathroom.jpg" alt="Badezimmer">
+            </div>
+            <h4>Badezimmer</h4>
+            <p>Gestalte dein Traumbadezimmer mit unseren Anleitungen.</p>
+            <a href="bathroom.html" class="btn">Mehr erfahren</a>
         </div>
     </div>
-
-    <!-- Audio Element -->
-    <audio id="ocean-audio" src="mp3/ocean.mp3"></audio>
 
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p>Folge uns auf <a href="https://www.instagram.com/young_bico" target="_blank">Instagram</a
+            <p>Folge uns auf <a href="https://www.instagram.com/hausplanung" target="_blank">Instagram</a></p>
+            <p>&copy; 2024 Hausplanung</p>
+        </div>
+    </footer>
+</body>
+</html>
