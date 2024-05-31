@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beats - Bicos Beatstore</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        .header {
+            background: #333;
+            padding: 20px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo img {
+            width: 150px;
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+        }
+        nav ul li {
+            margin: 0 15px;
+        }
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+        nav ul li a:hover {
+            color: #ddd;
+        }
+        .beats-section {
+            padding: 50px 0;
+            text-align: center;
+        }
+        .beats-section h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .beat-item {
+            background: #fff;
+            padding: 20px;
+            margin: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            display: inline-block;
+            text-align: left;
+            width: calc(33.333% - 40px);
+            box-sizing: border-box;
+        }
+        .beat-image {
+            position: relative;
+        }
+        .beat-image img {
+            max-width: 100%;
+            border-radius: 10px;
+        }
+        .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            background: rgba(0,0,0,0.5);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        .play-button::before {
+            content: '▶';
+            color: #fff;
+            font-size: 24px;
+        }
+        .footer {
+            background: #333;
+            color: #fff;
+            text-align: center;
+            padding: 20px 0;
+        }
+        .footer a {
+            color: #fff;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .footer a:hover {
+            color: #ddd;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="container">
+            <div class="navbar">
+                <div class="logo">
+                    <img src="images/logo.png" alt="Bicos Beatstore Logo">
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="Beats.html">Beats</a></li>
+                        <li><a href="About.html">About</a></li>
+                        <li><a href="Contact.html">Contact</a></li>
+                        <li><a href="Account.html">Account</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <!-- Beats Section -->
+    <div class="beats-section">
+        <div class="container">
+            <h2>Beats</h2>
+            <div class="beat-item" id="ocean-beat">
+                <div class="beat-image">
+                    <img src="images/ocean_image.jpg" alt="Beat Image">
+                    <div class="play-button" onclick="document.getElementById('ocean-audio').play()"></div>
+                </div>
+                <h4>Remember The Fallen (Youngbico & Ollie Takahashi) - 136 Bpm Amin</h4>
+                <p>Lease: $50</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio Element -->
+    <audio id="ocean-audio" src="mp3/ocean.mp3"></audio>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>Folge uns auf <a href="https://www.instagram.com/young_bico" target="_blank">Instagram</a></p>
+        </div>
+    </footer>
+</body>
+</html>
