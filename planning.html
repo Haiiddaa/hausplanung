@@ -6,7 +6,59 @@
     <title>Planungswerkzeug</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+        #canvas {
+            width: 100%;
+            height: calc(100% - 100px); /* Anpassen der Höhe für den Header */
+        }
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            font-size: 14px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo img {
+            width: 120px;
+            height: auto;
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+        }
+        nav ul li {
+            margin-right: 20px;
+        }
+        nav ul li:last-child {
+            margin-right: 0;
+        }
+        nav ul li a {
+            text-decoration: none;
+            color: #fff;
+            transition: color 0.3s;
+            font-size: 16px;
+        }
+        nav ul li a:hover {
+            color: #ddd;
+        }
+    </style>
 </head>
 <body>
     <!-- Header -->
@@ -29,27 +81,18 @@
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
-            <h1>Planungswerkzeug</h1>
-            <p>Plane dein Traumhaus mit unserem einfachen Werkzeug</p>
-        </div>
-    </section>
-
-    <!-- Content Section -->
-    <section class="content-section">
-        <div id="canvas"></div>
-    </section>
+    <!-- 3D-Szene -->
+    <div id="canvas"></div>
 
     <!-- Footer -->
-    <footer class="footer">
+    <footer>
         <div class="container">
             <p>Folge uns auf <a href="https://www.instagram.com/hausplanung" target="_blank">Instagram</a></p>
             <p>&copy; 2024 Hausplanung</p>
         </div>
     </footer>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
         // Erstellen Sie eine Szene, eine Kamera und ein Renderelement
         const scene = new THREE.Scene();
@@ -58,29 +101,57 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.getElementById('canvas').appendChild(renderer.domElement);
 
-        // Erstellen Sie ein Möbelstück (z. B. ein Sofa)
-        const geometry = new THREE.BoxGeometry(1, 1, 1);
-        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-        const sofa = new THREE.Mesh(geometry, material);
-        scene.add(sofa);
-
-        // Positionieren Sie das Möbelstück in der Szene
-        sofa.position.set(0, 0, -5);
-
-        // Positionieren und richten Sie die Kamera aus
-        camera.position.z = 5;
-
         // Fügen Sie eine Lichtquelle hinzu
         const light = new THREE.PointLight(0xffffff, 1);
         light.position.set(0, 0, 10);
         scene.add(light);
 
-        // Animieren Sie die Szene
-        function animate() {
-            requestAnimationFrame(animate);
-            renderer.render(scene, camera);
+        // Array zum Speichern der Möbelstücke
+        const furnitureArray = [];
+
+        // Funktion zum Hinzufügen eines Möbelstücks
+        function addFurniture(x, y, z) {
+            const geometry = new THREE.BoxGeometry(1, 1, 1);
+            const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+            const furniture = new THREE.Mesh(geometry, material);
+            furniture.position.set(x, y, z);
+            scene.add(furniture);
+            furnitureArray.push(furniture);
         }
-        animate();
-    </script>
-</body>
-</html>
+
+        // Maus-Interaktion
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
+
+        function onMouseMove(event) {
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+        }
+
+        function onMouseClick(event) {
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(scene.children);
+
+            if (intersects.length > 0) {
+                const intersect = intersects[0];
+                if (intersect.object.type === 'Mesh') {
+                    const index = furnitureArray.indexOf(intersect.object);
+                    if (index !== -1) {
+                        scene.remove(intersect.object);
+                        furnitureArray.splice(index, 1);
+                    }
+                }
+            } else {
+                const { x, y, z } = camera.position;
+                addFurniture(x, y, z - 5);
+            }
+        }
+
+        document.addEventListener('mousemove', onMouseMove, false);
+        document.addEventListener('click', onMouseClick, false);
+
+        // Positionieren und richten Sie die Kamera aus
+        camera.position.z = 10;
+
+        // Animieren Sie die Szene
+        function animate()
