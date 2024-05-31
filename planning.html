@@ -3,88 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Planungswerkzeug</title>
+    <title>Hausplanung - Planungswerkzeug</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-        }
         #canvas {
             width: 100%;
-            height: 100%;
+            height: calc(100vh - 100px); /* Adjust based on your header height */
+            background-color: #f4f4f4;
+        }
+        #planning-tool-container {
+            position: relative;
         }
         .header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background-color: #333;
+            background: #333;
             color: #fff;
             padding: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 1000;
+            text-align: center;
         }
-        .room-links {
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-            display: flex;
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
         }
-        .room-links li {
-            margin-right: 10px;
+        .content {
+            padding: 20px;
+            text-align: center;
         }
-        .room-links li:last-child {
-            margin-right: 0;
-        }
-        .room-links li a {
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 20px;
+            background: #28a745;
             color: #fff;
             text-decoration: none;
+            border-radius: 5px;
+            transition: background 0.3s;
+            font-size: 14px;
+        }
+        .btn:hover {
+            background: #218838;
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <ul class="room-links">
-            <li><a href="#living-room">Wohnzimmer</a></li>
-            <li><a href="#kitchen">Küche</a></li>
-            <li><a href="#bedroom">Schlafzimmer</a></li>
-            <li><a href="#bathroom">Badezimmer</a></li>
-        </ul>
-        <button id="add-furniture-btn">Möbel hinzufügen</button>
-    </div>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <h1>Hausplanung - Planungswerkzeug</h1>
+        </div>
+    </header>
 
-    <!-- 3D-Szene -->
-    <div id="canvas"></div>
+    <!-- Main Content -->
+    <div class="container content">
+        <p>Willkommen zur Hausplanung. Plane dein Traumhaus mit unserem einfachen Werkzeug.</p>
+        <div id="planning-tool-container">
+            <canvas id="canvas"></canvas>
+            <button id="start-planning-btn" class="btn">Jetzt starten</button>
+        </div>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
         // JavaScript-Code für die 3D-Szene und das Hinzufügen von Möbeln
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement);
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas') });
+        renderer.setSize(window.innerWidth, window.innerHeight - 100); // Adjust based on your header height
 
-        const geometry = new THREE.BoxGeometry();
-        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-        const cube = new THREE.Mesh(geometry, material);
-        scene.add(cube);
+        // Hinzufügen von Lichtern
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        scene.add(ambientLight);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+        directionalLight.position.set(10, 10, 5);
+        scene.add(directionalLight);
+
+        // Platzieren Sie Ihre 3D-Modelle hier
 
         camera.position.z = 5;
 
+        // Animationsfunktion
         const animate = function () {
             requestAnimationFrame(animate);
-
-            cube.rotation.x += 0.01;
-            cube.rotation.y += 0.01;
-
             renderer.render(scene, camera);
         };
+
+        document.getElementById('start-planning-btn').addEventListener('click', () => {
+            // Hier können Sie Logik hinzufügen, um das Planungstool zu starten
+            alert('Planungstool starten!');
+        });
 
         animate();
     </script>
